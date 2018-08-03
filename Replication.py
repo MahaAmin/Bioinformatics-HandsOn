@@ -76,7 +76,7 @@ def PatternCount(Text, Pattern):
     return count
 
 def symbolArray(genome, symbol):
-array = {}
+    array = {}
     # your code here
     n = len(genome)
     extendedGenome = genome + genome[0:n//2]
@@ -93,6 +93,3 @@ array = {}
         if extendedGenome[i+(n//2)-1] == symbol:
             array[i] = array[i]+1
     return array
-
-genome = input()
-print(symbolArray(genome, 'C'))
