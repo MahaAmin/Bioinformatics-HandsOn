@@ -60,7 +60,7 @@ def ReverseComplement(Pattern):
 
 
 # fill in your PatternMatching() function along with any subroutines that you need.
-def PatternMatching(Pattern, Genome):
+def PatternMatching(Genome, Pattern):
     positions = [] # output variable
     # your code here
     for i in range(len(Genome) - len(Pattern) +1):
@@ -74,3 +74,25 @@ def PatternCount(Text, Pattern):
         if Text[i:i+len(Pattern)] == Pattern:
             count = count+1
     return count
+
+def symbolArray(genome, symbol):
+array = {}
+    # your code here
+    n = len(genome)
+    extendedGenome = genome + genome[0:n//2]
+    # look at the first half of Genome to compute first array value
+    array[0] = PatternCount(symbol, genome[0:n//2])
+
+    for i in range(1, n):
+        # start by setting the current array value equal to the previous array value
+        array[i] = array[i-1]
+
+        # the current array value can differ from the previous array value by at most 1
+        if extendedGenome[i-1] == symbol:
+            array[i] = array[i]-1
+        if extendedGenome[i+(n//2)-1] == symbol:
+            array[i] = array[i]+1
+    return array
+
+genome = input()
+print(symbolArray(genome, 'C'))
