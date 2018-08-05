@@ -93,3 +93,27 @@ def symbolArray(genome, symbol):
         if extendedGenome[i+(n//2)-1] == symbol:
             array[i] = array[i]+1
     return array
+
+
+def skewArray(genome):
+    skew_array = [0] * (len(genome) + 1)
+    for i in range(len(genome)):
+        if genome[i] == 'A' or genome[i] == 'T':
+            skew_array[i+1] = skew_array[i]
+        elif genome[i] == 'G':
+            skew_array[i+1] = skew_array[i] + 1
+        elif genome[i] == 'C':
+            skew_array[i+1] = skew_array[i] - 1
+    return skew_array
+
+def minimumSkew(genome):
+    positions = []
+    skew = skewArray(genome)
+    minimum = min(skew)
+    for i in range(len(skew)):
+        if skew[i] <= minimum:
+            positions.append(i)
+    return positions
+
+
+print(minimumSkew("AGCGTGCCGAAATATGCCGCCAGACCTGCTGCGGTGGCCTCGCCGACTTCACGGATGCCAAGTGCATAGAGGAAGCGAGCAAAGGTGGTTTCTTTCGCTTTATCCAGCGCGTTAACCACGTTCTGTGCCGACTTT"))
