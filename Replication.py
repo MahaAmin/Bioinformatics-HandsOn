@@ -113,7 +113,27 @@ def minimumSkew(genome):
     for i in range(len(skew)):
         if skew[i] <= minimum:
             positions.append(i)
+    print("Skew: " + skew)
+    return positions
+
+def HammingDistance(p, q):
+    hamming_distance = 0
+    for i in range(max(len(p), len(q))):
+        if p[i] != q[i]:
+            hamming_distance += 1
+    return hamming_distance
+
+def ApproximatePatternMatching(Text, Pattern, d):
+    positions = []
+    for i in range(len(Text) - len(Pattern) + 1):
+        if(HammingDistance(Pattern, Text[i:i+len(Pattern)]) <= d):
+            positions.append(i)
     return positions
 
 
-print(minimumSkew("AGCGTGCCGAAATATGCCGCCAGACCTGCTGCGGTGGCCTCGCCGACTTCACGGATGCCAAGTGCATAGAGGAAGCGAGCAAAGGTGGTTTCTTTCGCTTTATCCAGCGCGTTAACCACGTTCTGTGCCGACTTT"))
+def ApproximatePatternCount(Pattern, Text, d):
+    count = 0
+    for i in range(len(Text)-len(Pattern)+1):
+        if HammingDistance(Pattern, Text[i:i+len(Pattern)]) <= d:
+            count = count+1
+    return count

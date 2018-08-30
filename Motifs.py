@@ -58,6 +58,32 @@ def Score(Motifs):
     return score
 
 
+def Pr(Text, Profile):
+    prob = 1
+    for i in range(len(Text)):
+        prob = prob * Profile[Text[i]][i]
+    return prob
+
+
+def ProfileMostProbablePattern(Text, k, Profile):
+    best_p = 0
+    best_kmer = Text[0:k]
+    for i in range(len(Text)-k+1):
+        p = Pr(Text[i:i+k], Profile)
+        if(p > best_p):
+            best_p = p
+            best_kmer = Text[i:i+k]
+    return best_kmer
+
+text = "ACGGGGATTACC"
+probab = {'A':[0.2, 0.2, 0.3, 0.2, 0.3],
+          'C':[0.4, 0.3, 0.1, 0.5, 0.1],
+          'G':[0.3, 0.3, 0.5, 0.2, 0.4],
+          'T':[0.1, 0.2, 0.1, 0.1, 0.2]}
+print(ProfileMostProbablePattern("ACCTGTTTATTGCCTAAGTTCCGAACAAACCCAATATAGCCCGAGGGCCT", 5, probab))
+
+
+
+
 
 motifs = ["AACGTA", "CCCGTT", "CACCTT", "GGATTA", "TTCCGG"]
-print(Score(motifs))
