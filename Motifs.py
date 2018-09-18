@@ -1,3 +1,5 @@
+import random
+
 # Input:  A set of kmers Motifs
 # Output: Count(Motifs)
 def Count(Motifs):
@@ -149,24 +151,42 @@ def GreedyMotifSearchWithPseudocounts(Dna, k, t):
     return BestMotifs
 
 
-def Motifs(Profile, DNA):
+def Motifs(Profile, DNA, l):
     best_kmers = []
     t = len(DNA)
 
     for i in range(t):
         k = len(DNA[i])
-        kmer = DNA[i][0:4]
+        kmer = DNA[i][0:l]
         best_prob = Pr(kmer, Profile)
-        for j in range(1,k-3):
-            if Pr(DNA[i][j:j+4], Profile) > best_prob:
-                best_prob = Pr(DNA[i][j:j+4], Profile)
-                kmer = DNA[i][j:j+4]
+        for j in range(1,k-l-1):
+            if Pr(DNA[i][j:j+l], Profile) > best_prob:
+                best_prob = Pr(DNA[i][j:j+l], Profile)
+                kmer = DNA[i][j:j+l]
         best_kmers.append(kmer)
 
     return best_kmers
 
 
-ProfileTestCase0= { 'A': [0.8, 0.0, 0.0, 0.2 ],'C': [ 0.0, 0.6, 0.2, 0.0], 'G': [ 0.2 ,0.2 ,0.8, 0.0], 'T': [ 0.0, 0.2, 0.0, 0.8]}
-DnaTC0=['TTACCTTAAC','GATGTCTGTC','ACGGCGTTAG','CCCTAACGAG','CGTCAGAGGT']
+def RandomMotifs(DNA, k, t):
+    randomKmers = []
+    for i in range(t):
+        start = random.randint(1, len(DNA[i]) - k - 1)
+        kmer = DNA[i][start:start+k]
+        randomKmers.append(kmer)
+    return randomKmers
 
-print(Motifs(ProfileTestCase0, DnaTC0))
+
+def RandomizedMotifSearch(Dna, k, t):
+    M = RandomMotifs(Dna, k, t)
+    BestMotifs = M
+    while True:
+        Profile = ProfileWithPseudocounts(M)
+        M = Motifs(Profile, Dna, k)
+        if Score(M) < Score(BestMotifs):
+            BestMotifs = M
+        else:
+            return BestMotifs
+
+DNA = ["CGCCCCTCTCGGGGGTGTTCAGTAAACGGCCA", "GGGCGAGGTATGTGTAAGTGCCAAGGTGCCAG", "TAGTACCGAGACCGAAAGAAGTATACAGGCGT", "TAGATCAAGTTTCAGGTGCACGTCGGTGAACC", "AATCCACCAGCTCCACGTGCAATGTTGGCCTA"]
+print(RandomizedMotifSearch(DNA, 8, 5))
