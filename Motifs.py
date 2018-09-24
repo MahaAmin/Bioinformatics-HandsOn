@@ -1,4 +1,5 @@
 import random
+from operator import itemgetter
 
 # Input:  A set of kmers Motifs
 # Output: Count(Motifs)
@@ -188,5 +189,36 @@ def RandomizedMotifSearch(Dna, k, t):
         else:
             return BestMotifs
 
-DNA = ["CGCCCCTCTCGGGGGTGTTCAGTAAACGGCCA", "GGGCGAGGTATGTGTAAGTGCCAAGGTGCCAG", "TAGTACCGAGACCGAAAGAAGTATACAGGCGT", "TAGATCAAGTTTCAGGTGCACGTCGGTGAACC", "AATCCACCAGCTCCACGTGCAATGTTGGCCTA"]
-print(RandomizedMotifSearch(DNA, 8, 5))
+
+def Normalize(Probabilities):
+    k = len(Probabilities)
+    sumOfKmers = 0
+    for key in Probabilities.keys():
+        sumOfKmers += Probabilities[key]
+    for key in Probabilities.keys():
+        Probabilities[key] = Probabilities[key] / sumOfKmers
+
+    return Probabilities
+
+
+def WeightedDie(Probabilities):
+    kmer = ''
+    p = random.uniform(0,1)
+    prob = 0
+    for i,j in sorted(Probabilities.items(), key=itemgetter(1)):
+        if prob <= p < j + prob:
+            return i
+        prob += j
+
+
+def ProfileGeneratedString(Text, profile, k):
+    n = len(Text)
+    probabilities = {}
+    for i in range(0,n-k+1):
+        probabilities[Text[i:i+k]] = Pr(Text[i:i+k], profile)
+    probabilities = Normalize(probabilities)
+    return WeightedDie(probabilities)
+
+
+Profile = {'A': [0.5, 0.1], 'C': [0.3, 0.2], 'G': [0.2, 0.4], 'T': [0.0, 0.3]}
+print(ProfileGeneratedString("AAACCCAAACCC", Profile, 2))
